@@ -66,7 +66,7 @@ else:
 response = mkr({},'http://cms.rdfz.cn/TeacherAppraise/AppraiseInput/AppraiseStuInput.aspx')
 
 #read rules
-rulesf = open('rules.txt','r')
+rulesf = open('rules','r')
 infteas = ['a']
 inftgrades = ['a']
 for l in rulesf:
