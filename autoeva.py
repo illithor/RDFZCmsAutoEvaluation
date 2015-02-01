@@ -4,6 +4,7 @@ import urllib.parse
 import socket
 import http.cookiejar
 import random
+import getpass
 
 timeout = 10
 socket.setdefaulttimeout(timeout)
@@ -52,7 +53,7 @@ def mkr(rawdata, addr):
 
 # login
 usn = input('Your username: ')
-psw = input('And your password: ')
+psw = getpass.getpass('And your password: ')
 vst = getViewstate(response.read().decode('utf-8'))
 loginfo = {'__VIEWSTATE': vst, '__EVENTTARGET': '', '__EVENTARGUMENT': '','TxtUserName': usn, 'TxtPassword': psw, 'ImgbtnLogin.x': '86', 'ImgbtnLogin.y': '13'}
 response = mkr(loginfo,response.geturl())
@@ -66,7 +67,10 @@ else:
 response = mkr({},'http://cms.rdfz.cn/TeacherAppraise/AppraiseInput/AppraiseStuInput.aspx')
 
 #read rules
-rulesf = open('rules','r')
+try:
+    rulesf = open('rules','r')
+except FileNotFoundError:
+    rulesf = []
 infteas = ['a']
 inftgrades = ['a']
 for l in rulesf:
@@ -75,7 +79,7 @@ for l in rulesf:
     inftgrades.append(gr[0])
 infteas.pop(0)
 inftgrades.pop(0)
-rulesf.close()
+if rulesf: rulesf.close()
 rules = dict(zip(infteas,inftgrades))
 if 'Default' in rules:
     grade = rules['Default']
@@ -130,15 +134,15 @@ while True:
         dataf.append(chopFile('name="','"',page))
         datab.append(chopFile('value="','"',page))
 
-    fpt = page.find('<ul')
-    page = page[fpt:]
-    dataf.append(chopFile('name="','"',page))
-    datab.append(chopFile('value="','"',page))
-    fpt = page.find('<textarea')
-    page = page[fpt:]
-    dataf.append(chopFile('name="','"',page))
-    datab.append('')
-    fpt = page.find('<input')
+    # fpt = page.find('<ul')
+    # page = page[fpt:]
+    # dataf.append(chopFile('name="','"',page))
+    # datab.append(chopFile('value="','"',page))
+    # fpt = page.find('<textarea')
+    # page = page[fpt:]
+    # dataf.append(chopFile('name="','"',page))
+    # datab.append('')
+    fpt = page.rfind('<input')
     page = page[fpt:]
     dataf.append(chopFile('name="','"',page))
     datab.append(chopFile('value="','"',page))
